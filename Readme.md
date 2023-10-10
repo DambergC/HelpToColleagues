@@ -22,5 +22,6 @@ If you use "FilterIPs" and the script finds match it will write TRUE in the outp
 
 #### One-Liner
 One-Liner to get all servers in AD to a csv-file
-
+```sh
 Get-ADComputer -Filter 'operatingsystem -like "*server*" -and enabled -eq "true"' -Properties * | Select-Object name | export-csv c:\temp\server.csv -NoClobber -Encoding UTF8
+```
