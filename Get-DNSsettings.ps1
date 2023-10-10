@@ -1,18 +1,35 @@
-﻿<#	
-	.NOTES
-	===========================================================================
-	 Created with: 	SAPIEN Technologies, Inc., PowerShell Studio 2023 v5.8.229
-	 Created on:   	2023-10-10 08:37
-	 Created by:   	Christian Damberg
-	 Organization: 	Telia Cygate AB
-	 Filename:     	Get-DNSSettings.ps1
-	===========================================================================
+﻿<#
+	.SYNOPSIS
+		Get DNS-settings and verify specfic dns-server ipaddress.
+	
 	.DESCRIPTION
-		A description of the file.
+		The script reads a csv-file with servernames and connect remotely to get DNS-setting. If you har searching for a specific dns-server you can use FilteIPs.
+	
+	.PARAMETER FilterIPs
+		Search for specific ipaddress for a DNS-server.
+	
+		Get-DNSsettings.ps1 -FilterIPs '192.168.1.200' -CSVFile 'd:\test\servers.csv'
+	
+	.PARAMETER CSVFile
+		CSV-file with servers to get dns-settings. Must have the format
+
+		Name,
+		server01,
+		server02,
+
+		Get-DNSsettings.ps1 -CSVFile 'd:\test\servers.csv'
+	
+	.NOTES
+		===========================================================================
+		Created with: 	SAPIEN Technologies, Inc., PowerShell Studio 2023 v5.8.229
+		Created on:   	2023-10-10 08:37
+		Created by:   	Christian Damberg
+		Organization: 	Telia Cygate AB
+		Filename:     	Get-DNSSettings.ps1
+		===========================================================================
 #>
-
-
-Param (
+param
+(
 	[Parameter(Mandatory = $false)]
 	[String]$FilterIPs,
 	[Parameter(Mandatory = $false)]
@@ -21,10 +38,8 @@ Param (
 
 $data = @()
 
-
-
 $servers = import-csv -Path $CSVFile
-#$servers = 'dc01', 'fs01', 'cm01'
+
 
 foreach ($server in $servers)
 {
@@ -98,9 +113,7 @@ foreach ($server in $servers)
 		
 		$data += $object
 	}
-	
-	
-	
+
 }
 
 Write-host 'Done!' -ForeGroundColor Green
