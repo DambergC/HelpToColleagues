@@ -11,7 +11,7 @@
 		Get-DNSsettings.ps1 -FilterIPs '192.168.1.200' -CSVFile 'd:\test\servers.csv'
 	
 	.PARAMETER CSVFile
-		CSV-file with servers to get dns-settings. Must have the format
+		CSV-file with servers to get dns-settings. Must have the format.
 
 		Name,
 		server01,
