@@ -6,7 +6,17 @@ Save script on the server, start a powershell console as administrator in the fo
 
 You need to create a csv-file with the devices you want to check dns-settings.
 
+### FilterIP
+If you use "FilterIPs" and the script finds match it will write TRUE in the output.
+
 ### Output
 - out-gridview
 - csv-file
 - console
+#### Out-gridview
+![ProjectIcon](https://raw.githubusercontent.com/DambergC/HelpToColleagues/main/Images/Out-Gridview_Get-DnsSettings.png)
+#### CSV-file
+![ProjectIcon](https://raw.githubusercontent.com/DambergC/HelpToColleagues/main/Images/CSV-File_Get-DnsSettings.png)
+#### Console
+![ProjectIcon](https://raw.githubusercontent.com/DambergC/HelpToColleagues/main/Images/Console_Get-DnsSettings.png)
+
