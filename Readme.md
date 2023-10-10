@@ -20,3 +20,7 @@ If you use "FilterIPs" and the script finds match it will write TRUE in the outp
 #### Console
 ![ProjectIcon](https://raw.githubusercontent.com/DambergC/HelpToColleagues/main/Images/Console_Get-DnsSettings.png)
 
+#### One-Liner
+One-Liner to get all servers in AD to a csv-file
+
+Get-ADComputer -Filter 'operatingsystem -like "*server*" -and enabled -eq "true"' -Properties * | Select-Object name | export-csv c:\temp\server.csv -NoClobber -Encoding UTF8
