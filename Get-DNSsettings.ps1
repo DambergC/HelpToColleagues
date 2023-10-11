@@ -37,10 +37,7 @@
 	.PARAMETER Credential
 		If Credential is requried to run the script you need to do the following steps to create a variable with your login credentials.
 		
-		PS C:\>$UserID = 'DOMAIN\UserID'
-		PS C:\>$PlainPassword = 'mypassword'
-		PS C:\>$SecPwd = ConvertTo-SecureString $PlainPassword -AsPlainText -Force
-		PS C:\>$Cred = New-Object System.Management.Automation.PSCredential ($UserID,$SecPwd)
+		$cred = get-credential
 		
 		Get-DNSsettings.ps1 -FilterIPs '192.168.1.200' -CSVFile 'd:\test\servers.csv' -credential $cred
 	
