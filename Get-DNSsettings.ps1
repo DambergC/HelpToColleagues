@@ -67,10 +67,10 @@ param
 $data = @()
 
 $servers = import-csv -Path $CSVFile
-
+$index = 1
 foreach ($server in $servers)
 {
-	
+	Write-Progress -CurrentOperation "Processing server $index $($server.count)" -Activity 'Checking dns-settings' -PercentComplete (($index) / ($servers.count)* 100)
 	$ComputerName = $server.name
 	
 	If (Test-Connection $ComputerName -Count 1 -ErrorAction SilentlyContinue)
@@ -193,6 +193,8 @@ foreach ($server in $servers)
 		
 		$data += $object
 	}
+ 
+$index++
 }
 
 
