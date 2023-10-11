@@ -61,13 +61,12 @@ param
 	[String]$FilterIPs,
 	[ValidateSet('Out-Gridview', 'Console', 'CsvFile')]
 	[String]$OutPut,
-	[PSCredential]$Credential
+	[pscredential]$Credential
 )
 
 $data = @()
 
 $servers = import-csv -Path $CSVFile
-
 
 foreach ($server in $servers)
 {
@@ -197,7 +196,7 @@ else
 	$data += $object
 }
 
-}
+
 
 Write-host 'Done!' -ForeGroundColor Green
 
