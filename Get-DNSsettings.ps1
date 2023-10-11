@@ -179,22 +179,20 @@ foreach ($server in $servers)
 			}
 		}
 		
-		else
-		{
-			
-			$object = New-Object -TypeName PSObject
-			$object | Add-Member -MemberType NoteProperty -Name 'ComputerName' -Value $ComputerName
-			$object | Add-Member -MemberType NoteProperty -Name 'IPaddress' -Value $null
-			$object | Add-Member -MemberType NoteProperty -Name 'DefaultIPGateway' -Value $null
-			$object | Add-Member -MemberType NoteProperty -Name 'DNSServerSearchOrder' -Value $null
-			$object | Add-Member -MemberType NoteProperty -Name 'MatchFilter' -Value $null
-			$object | Add-Member -MemberType NoteProperty -Name 'Result' -Value 'Failed'
-			
-			$data += $object
-		}
-		
 	}
-	
+	else
+	{
+		
+		$object = New-Object -TypeName PSObject
+		$object | Add-Member -MemberType NoteProperty -Name 'ComputerName' -Value $ComputerName
+		$object | Add-Member -MemberType NoteProperty -Name 'IPaddress' -Value $null
+		$object | Add-Member -MemberType NoteProperty -Name 'DefaultIPGateway' -Value $null
+		$object | Add-Member -MemberType NoteProperty -Name 'DNSServerSearchOrder' -Value $null
+		$object | Add-Member -MemberType NoteProperty -Name 'MatchFilter' -Value $null
+		$object | Add-Member -MemberType NoteProperty -Name 'Result' -Value 'Failed'
+		
+		$data += $object
+	}
 }
 
 
