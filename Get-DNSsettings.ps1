@@ -71,7 +71,8 @@ $index = 1
 foreach ($server in $servers)
 {
 	Write-Progress -CurrentOperation "Processing server $index $($server.count)" -Activity 'Checking dns-settings' -PercentComplete (($index) / ($servers.count)* 100)
-	$ComputerName = $server.name
+	Start-Sleep -Milliseconds 150
+ 	$ComputerName = $server.name
 	
 	If (Test-Connection $ComputerName -Count 1 -ErrorAction SilentlyContinue)
 	{
