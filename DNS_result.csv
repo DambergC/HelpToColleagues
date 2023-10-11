@@ -1,0 +1,7 @@
+﻿#TYPE System.Management.Automation.PSCustomObject
+"ComputerName","IPaddress","DefaultIPGateway","DNSServerSearchOrder","MatchFilter","Result"
+"fs01","System.String[]","System.String[]","192.168.1.200","True","OK"
+"fs02",,,,,"Failed"
+"fs03",,,,,"Failed"
+"dc01","System.String[]","System.String[]","127.0.0.1",,"OK"
+"cm01","System.String[]","System.String[]","192.168.1.200","True","OK"
