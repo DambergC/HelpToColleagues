@@ -1,0 +1,17 @@
+[ SMS_Report (TRUE),
+  SMS_Group_Name ("LocalSecurityGroupInventory"),
+  SMS_Class_ID ("MICROSOFT|LOCALSECURITYGROUPINVENTORY|1.0"),
+  Namespace ("root\\\\cimv2") ]
+class LocalSecurityGroupInventory : SMS_Class_Template
+{
+    [ SMS_Report (TRUE), key ]
+    String     Domain;
+    [ SMS_Report (TRUE), key ]
+    String     LocalSecurityGroup;
+    [ SMS_Report (TRUE), key ]
+    String     PrimaryKey;
+    [ SMS_Report (TRUE), key ]
+    String     SID;
+    [ SMS_Report (TRUE) ]
+    String     User;
+};
