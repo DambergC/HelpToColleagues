@@ -356,5 +356,7 @@ if (((Get-WmiObject -Class "$InventoryWMIClass" -ComputerName $env:COMPUTERNAME 
 else {
 Write-Verbose 'Return 2 to SCCM, to notify compliance script failed due to the WMI class being empty.'
 return 2
+
 }
+
 #<<< End of script work >>>

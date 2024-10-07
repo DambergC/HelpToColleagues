@@ -1,0 +1,7 @@
+$adsi = [ADSI]"LDAP://dc01.corp.damberg.org"
+$searcher = New-Object DirectoryServices.DirectorySearcher($adsi)
+$searcher.Filter = "(sAMAccountName=ami)"
+$result = $searcher.FindOne()
+
+$result.Properties.cn
+$result.Properties.sn
