@@ -3,7 +3,7 @@ $scriptversion = '1.0'
 $scriptname = $MyInvocation.MyCommand.Name
 $ResultColl = @()
 $dbserver = 'cm01'
-$exclude = @("Administrator","CM_CP","Domain Admins")
+$exclude = @("Administrator","Domain Admins")
 
 # modules
 

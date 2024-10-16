@@ -200,8 +200,21 @@ Function New-WMIInstance {
 
         $fullname = $result["Name"].ToString()
         $fullname
-        ##>
 
+              ##>
+
+              $propertyValues = @()
+$searcher = New-Object DirectoryServices.DirectorySearcher
+$searcher.Filter = "(&(objectClass=user)(sAMAccountName=$searcherFullName))"
+$result = $searcher.FindOne()
+$propertyValues = $result.Properties
+
+$propertyValues.Count
+
+foreach ($value in $propertyValues) {
+    Write-Output $value
+
+}
         $user = ([adsisearcher]"(sAMAccountName=$searcherFullName)").FindOne().Properties
         $fullname = $user["Displayname"].ToString()
         
@@ -210,7 +223,7 @@ Function New-WMIInstance {
                                                              SID = $LocalAdministrator.SID; 
                                                              LocalSecurityGroup = $LocalAdministrator.LocalSecurityGroup; 
                                                              Domain = $LocalAdministrator.Domain;
-                                                             FullName = $Fullname; 
+                                                             FullName = $value; 
                                                              User = $LocalAdministrator.User}
                                                             
 
@@ -236,8 +249,6 @@ $OutputFileLocation = '' #''|C:\Windows\Logs
 $SCCMReporting = $true
 #<<< End of Setting up housekeeping >>>
 
-　
-　
 # Start of script work ############################################################################
 $GetLocalGroupAlternative = @()
 $i = $null

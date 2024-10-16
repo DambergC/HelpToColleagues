@@ -239,6 +239,7 @@ foreach ($LocalSecuirtyGroup in $LocalSecurityGroups) {
     Write-Verbose "Get members of Local Security Group '$LocalSecuirtyGroup'."
     Try {
         $Members = Get-LocalGroupMember $LocalSecuirtyGroup -ErrorAction SilentlyContinue
+        
     }
     Catch{
         Write-Verbose 'Get-LocalGroupMember had an issue, most likely with orphaned SIDs or cmdlet Get-LocalGroupMember failed.'
@@ -279,6 +280,7 @@ default {$domain}}}},
 } 
     else {
         Write-Verbose 'Get-LocalGroupMember ran OK, and didnt run into orphaned SID problems.'
+        Write-host 'Get-LocalGroupMember ran OK, and didnt run into orphaned SID problems.'
         foreach ($Member in $Members) {
 	        #Create new object
 	        $Admin = New-Object -TypeName System.Management.Automation.PSObject
@@ -303,6 +305,7 @@ default {$domain}}}},
 }
 
 Write-Verbose 'Report output to WMI which will report up to SCCM.'
+Write-host 'Report output to WMI which will report up to SCCM.'
 if ($SCCMReporting) {
 	New-WMIClass -Class "$InventoryWMIClass"
 	New-WMIInstance -Class "$InventoryWMIClass" -LocalAdministrators $LocalInventory
@@ -312,6 +315,7 @@ if ($SCCMReporting) {
 
 if ($OutputFileLocation -ne '') {
 	Write-Verbose "Writing to file location '$OutputFileLocation'"
+    Write-host "Writing to file location '$OutputFileLocation'"
     $FileName = "Inventory-LocalAdministratorsGroup"
     if ($OutputFileLocation[$OutputFileLocation.Length - 1] -ne "\") {
 		$File = $OutputFileLocation + "\" + $FileName + ".log"
@@ -319,6 +323,7 @@ if ($OutputFileLocation -ne '') {
 		$File = $OutputFileLocation + $FileName + ".log"
 	}
 	Write-Verbose 'Delete old log file if it exists.'
+Write-host 'Delete old log file if it exists.'
 	$Output = "Deleting $FileName.log....."
 	if ((Test-Path $File) -eq $true) {
 		Remove-Item -Path $File -Force
@@ -329,6 +334,7 @@ if ($OutputFileLocation -ne '') {
 		$Output += "Failed"
 	}
 	Write-Verbose $Output
+    Write-host $Output
 	$Output = "Writing local admins to $FileName.log....."
 	$LocalInventory | Format-Table | Out-File $File
 	if ((Test-Path $File) -eq $true) {
@@ -337,26 +343,36 @@ if ($OutputFileLocation -ne '') {
 		$Output += "Failed"
 	}
 	Write-Verbose $Output
+Write-host $Output
 }
 
 Write-Verbose "Display members Local Security Group '$LocalSecurityGroups'."
 Write-Verbose "$($LocalInventory | Format-Table | Out-String)"
+Write-host "Display members Local Security Group '$LocalSecurityGroups'."
+Write-host "$($LocalInventory | Format-Table | Out-String)"
 
 if (((Get-WmiObject -Class "$InventoryWMIClass" -ComputerName $env:COMPUTERNAME -Namespace 'ROOT\cimv2').Count -gt 0)) {
     #Use PowerShell 2.0 member enumeration for Windows Server 2008R2 compatibility.
     if ((@($LocalInventory| Select-Object -Expand User) -match 'S-1-5-21').Count -ne 0) {
         Write-Verbose 'Return 1 to SCCM, to notify compliance script failed due to orphaned SIDs.'
-        return 1
+        Write-host 'Return 1 to SCCM, to notify compliance script failed due to orphaned SIDs.'
+        $compliance = '1'
+        
     }
     else {
         Write-Verbose 'Return true to SCCM, to notify compliance script ran OK.'
-        return 0
+        Write-host 'Return true to SCCM, to notify compliance script ran OK.'
+        $compliance = '0'
+        
     }
 }
 else {
 Write-Verbose 'Return 2 to SCCM, to notify compliance script failed due to the WMI class being empty.'
-return 2
-
+Write-host 'Return 2 to SCCM, to notify compliance script failed due to the WMI class being empty.'
+$compliance = '2'
+Write-Output '2'
 }
+
+return $Compliance
 
 #<<< End of script work >>>
