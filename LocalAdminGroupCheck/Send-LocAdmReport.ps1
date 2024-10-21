@@ -57,6 +57,28 @@ if (-not (Get-Module -name PSWriteHTML))
 
                     $resourceid = $device.ResourceID
 
+                    if ($device.Domain0 -ne 'BUILTIN')
+
+                    {
+                        $username = $device.User0
+                        $displayName = ([adsisearcher]"(&(objectClass=user)(samaccountname=$username))").FindOne().Properties['Displayname'] 
+
+                        
+                        # Extract and clean the displayName property
+                        if ($searcher -ne $null) {
+                            $cleanDisplayName = $displayName -replace "[\[\]]", ""
+                            Write-Output $cleanDisplayName
+                        } else {
+                            Write-Output "User not found."
+                        }
+                    }
+
+                    else
+
+                    {
+                        $displayName = 'Local Account or group'
+                    }
+
                     $querydevice = "SELECT SMS_R_System.Name0 AS ClientName FROM v_R_System AS SMS_R_System WHERE SMS_R_System.ResourceID = $resourceid";
 
                     $clientname = Invoke-Sqlcmd -ServerInstance $dbserver -Database CM_PS1 -Query $querydevice
@@ -68,14 +90,14 @@ if (-not (Get-Module -name PSWriteHTML))
                         $object | Add-Member -MemberType NoteProperty -Name 'GroupName' -Value $device.LocalSecurityGroup0
                         $object | Add-Member -MemberType NoteProperty -Name 'SID' -Value $device.SID0
                         $object | Add-Member -MemberType NoteProperty -Name 'User' -Value $device.User0
-
+                        $object | Add-Member -MemberType NoteProperty -Name 'DisplayName' -Value $displayName
 
 				        $resultColl += $object
 
 
                 }
                             
-
+$ResultColl
 
 $filteredArray = $ResultColl | Where-Object { $exclude -notcontains $_.user}
 
