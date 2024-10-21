@@ -1,4 +1,21 @@
 ﻿# script variables
+
+
+<#
+	.SYNOPSIS
+		A brief description of the Send-LocAdmReport.ps1 file.
+	
+	.DESCRIPTION
+		Script to extract data from database and send it by mail
+	
+	.EXAMPLE
+		PS C:\> .\Send-LocAdmReport.ps1
+	
+	.NOTES
+		Additional information about the file.
+#>
+
+
 $scriptversion = '1.0'
 $scriptname = $MyInvocation.MyCommand.Name
 $ResultColl = @()
