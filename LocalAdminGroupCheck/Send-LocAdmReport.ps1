@@ -34,8 +34,9 @@ $checkfordbtools = Get-Module dbatools -ListAvailable
 
 if (-not $checkfordbtools.name -eq 'dbatools')
 {
-    #Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-	#Install-Module dbatools -ErrorAction SilentlyContinue -Force
+    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+	Install-Module dbatools -ErrorAction SilentlyContinue -Force
+    Import-Module dbatools -Force
 	write-host 'Dbtools not installed'
 }
 
@@ -65,18 +66,57 @@ if (-not (Get-Module -name PSWriteHTML))
               ,[User0]
           FROM [CM_PS1].[dbo].[v_GS_LOCALSECURITYGROUPINVENTORY]"
                            
-            	$data = Invoke-Sqlcmd -ServerInstance $dbserver -Database CM_PS1 -Query $query
+            	
+            Set-DbatoolsConfig -FullName sql.connection.trustcert -Value $true -Register
+            Set-DbatoolsConfig -FullName sql.connection.encrypt -Value $false -Register 
+
+                
+            #$data = Invoke-Sqlcmd -ServerInstance $dbserver -Database CM_PS1 -Query $query
+                $data = Invoke-DbaQuery -SqlInstance $dbserver -Database cm_ps1 -Query $query
 
 
                 ForEach ($device in $data)
 
                 {
 
-                    $resourceid = $device.ResourceID
+                       $username = $device.User0
+
+                        if ($exclude -contains $username)
+                        {
+                            write-host "Excluded:$username"
+                        }
+
+                        else
+
+                        {
+
+                            $resourceid = $device.ResourceID
+
+                                if ($device.Domain0 -ne 'BUILTIN')
+
+                                {
+
+                                        $displayName = ([adsisearcher]"(&(objectClass=user)(samaccountname=$username))").FindOne().Properties['Displayname'] 
+                                                        
+                                    # Extract and clean the displayName property
+                                    if ($displayName -ne $null) {
+                                        $cleanDisplayName = $displayName -replace "[\[\]]", ""
+                                        Write-Output "$username $cleanDisplayName"
+                                    } else {
+                                        Write-Output "User not found."
+                                    }
+                                }
+
+                                else
+
+                                {
+                                    $displayName = 'Local Account or group'
+                                }
 
                     $querydevice = "SELECT SMS_R_System.Name0 AS ClientName FROM v_R_System AS SMS_R_System WHERE SMS_R_System.ResourceID = $resourceid";
 
-                    $clientname = Invoke-Sqlcmd -ServerInstance $dbserver -Database CM_PS1 -Query $querydevice
+                    #$clientname = Invoke-Sqlcmd -ServerInstance $dbserver -Database CM_PS1 -Query $querydevice
+                    $clientname = Invoke-DbaQuery -SqlInstance $dbserver -Database CM_PS1 -Query $querydevice
                     $clientnameToString = $clientname.ClientName
                    
                     	$object = New-Object -TypeName PSObject
@@ -85,14 +125,21 @@ if (-not (Get-Module -name PSWriteHTML))
                         $object | Add-Member -MemberType NoteProperty -Name 'GroupName' -Value $device.LocalSecurityGroup0
                         $object | Add-Member -MemberType NoteProperty -Name 'SID' -Value $device.SID0
                         $object | Add-Member -MemberType NoteProperty -Name 'User' -Value $device.User0
-
+                        $object | Add-Member -MemberType NoteProperty -Name 'DisplayName' -Value $displayName
 
 				        $resultColl += $object
 
 
                 }
-                            
 
+
+
+                        }
+
+
+
+
+                            
 
 $filteredArray = $ResultColl | Where-Object { $exclude -notcontains $_.user}
 
